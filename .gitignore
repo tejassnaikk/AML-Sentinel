@@ -1,0 +1,6 @@
+data/
+mlruns/
+__pycache__/
+*.pyc
+.DS_Store
+._*
