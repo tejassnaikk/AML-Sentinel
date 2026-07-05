@@ -4,3 +4,7 @@ __pycache__/
 *.pyc
 .DS_Store
 ._*
+silver/*.parquet
+features/*.parquet
+scores/*.parquet
+gold/*.parquet
