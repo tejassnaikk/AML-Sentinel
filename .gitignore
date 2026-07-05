@@ -10,3 +10,7 @@ scores/*.parquet
 gold/*.parquet
 mlflow.db
 mlruns/
+infra/.terraform/
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/*.tfvars
