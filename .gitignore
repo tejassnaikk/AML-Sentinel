@@ -8,3 +8,5 @@ silver/*.parquet
 features/*.parquet
 scores/*.parquet
 gold/*.parquet
+mlflow.db
+mlruns/
