@@ -70,7 +70,12 @@ ev["account_id"] = np.where(ev.from_account.isin(acct_set), ev.from_account, ev.
 ev_ids = ev.groupby("account_id")["tx_id"].apply(lambda s: ",".join(map(str, s.head(5))))
 top["supporting_tx_ids"] = top.account_id.map(ev_ids).fillna("")
 
-sar = top[["candidate_id", "account_id", "risk_score", "explanation", "supporting_tx_ids", "status", "label"]]
+# join network + flow context for dashboard drill-through
+net_map = graph[["account_id", "scc_id", "scc_size"]].rename(columns={"scc_id": "network_id"})
+top = top.merge(net_map, on="account_id", how="left")
+top["network_id"] = top.network_id.where(top.scc_size_y.between(2, 50), other=-1).fillna(-1).astype(int)
+top["total_flow_usd"] = top.usd_in + top.usd_out
+sar = top[["candidate_id", "account_id", "network_id", "risk_score", "total_flow_usd", "explanation", "supporting_tx_ids", "status", "label"]]
 con.sql("CREATE TABLE sar AS SELECT * FROM sar")
 con.sql("COPY sar TO 'gold/sar_candidates.parquet' (FORMAT PARQUET, COMPRESSION SNAPPY)")
 tp = int(sar.label.sum())
